@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Vite build output
+/dist/
+
+# Log files
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+
+# Editor files
+*.swp
+*.swo
+*.swn
+*.swm
+*.swl
+*.swo
+*.swn
+
+# Build files
+build/
+dist/
+out/
+public/
+
+
+# lockfile
+yarn.lock
+package-lock.json
+bundle-lock.json
+bun.lockb
