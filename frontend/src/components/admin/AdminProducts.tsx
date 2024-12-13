@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { products } from '@/lib/data';
 import { Product } from '@/types';
 import { useNavigate } from 'react-router-dom';
-import { DeleteProductDialog } from 'src/components/admin/DeleteProductDialog';
+import { DeleteProductDialog } from '@/components/admin/DeleteProductDialog';
 
 export function AdminProducts() {
   const [productList, setProductList] = useState<Product[]>(products);
