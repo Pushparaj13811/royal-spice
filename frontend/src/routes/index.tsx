@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
-import { mainRoutes } from 'src/routes/sections/MainRoutes';
-import { authRoutes } from 'src/routes/sections/AuthRoutes';
-import { userRoutes } from 'src/routes/sections/UserRoutes';
-import { adminRoutes } from 'src/routes/sections/AdminRoutes';
-import { checkoutRoutes } from 'src/routes/sections/CheckoutRoutes';
+import { mainRoutes } from '@/routes/sections/MainRoutes';
+import { authRoutes } from '@/routes/sections/AuthRoutes';
+import { userRoutes } from '@/routes/sections/UserRoutes';
+import { adminRoutes } from '@/routes/sections/AdminRoutes';
+import { checkoutRoutes } from '@/routes/sections/CheckoutRoutes';
 import LoadingScreen from '@/components/LoadingScreen';
 
 export default function Router() {

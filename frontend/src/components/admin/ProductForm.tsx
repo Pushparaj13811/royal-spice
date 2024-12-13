@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Product } from '@/types';
-import { ImageUpload } from 'src/components/admin/ImageUpload';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
