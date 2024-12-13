@@ -1,0 +1,56 @@
+{
+  "name": "royalspicebackend",
+  "version": "1.0.0",
+  "description": "Backend for Royal Spice and Dry Fruits website, built with Node.js and Express. Provides APIs for product management, user authentication, cart handling, and order processing",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pushparaj13811/royal-spice.git"
+  },
+  "keywords": [
+    "Royal",
+    "Spice",
+    "Dry",
+    "Fruits",
+    "Backend",
+    "Node.js",
+    "Express.js",
+    "REST",
+    "API",
+    "Product",
+    "Management",
+    "User",
+    "Authentication",
+    "Cart",
+    "Functionality",
+    "Order",
+    "Processing",
+    "E-commerce",
+    "API",
+    "Development",
+    "Database",
+    "Integration",
+    "Secure",
+    "Transactions"
+  ],
+  "author": "webwrap technologies",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/Pushparaj13811/royal-spice/issues"
+  },
+  "homepage": "https://github.com/Pushparaj13811/royal-spice#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.8.4"
+  }
+}
