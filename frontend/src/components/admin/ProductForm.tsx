@@ -30,7 +30,7 @@ const productSchema = z.object({
   price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: 'Price must be a positive number',
   }),
-  category: z.enum(['spices', 'dryfruits']),
+  category: z.enum(['nuts', 'dryfruits']),
 });
 
 interface ProductFormProps {
@@ -50,7 +50,7 @@ export function ProductForm({ product, onSubmit, isEditMode }: ProductFormProps)
       name: product?.name || '',
       description: product?.description || '',
       price: product?.price.toString() || '',
-      category: product?.category || 'spices',
+      category: product?.category || 'nuts',
     },
   });
 
@@ -132,7 +132,7 @@ export function ProductForm({ product, onSubmit, isEditMode }: ProductFormProps)
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="spices">Spices</SelectItem>
+                  <SelectItem value="nuts">Nuts</SelectItem>
                   <SelectItem value="dryfruits">Dry Fruits</SelectItem>
                 </SelectContent>
               </Select>

@@ -12,12 +12,13 @@ export function Footer() {
               to="/"
               className="flex items-center justify-center gap-2 lg:justify-start"
             >
-              <span className="text-2xl font-bold text-primary">Royal</span>
-              <span className="text-2xl font-bold text-secondary">Spice</span>
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Swarnuts
+              </span>
             </Link>
-            <p className="text-sm text-muted-foreground">
-              Premium spices and dry fruits, sourced directly from the finest
-              farms and delivered fresh to your doorstep.
+            <p className="mt-6 text-sm text-muted-foreground">
+              Premium nuts and dry fruits, sourced directly from the finest
+              farms across India.
             </p>
           </div>
 
@@ -63,7 +64,7 @@ export function Footer() {
               <li>123 Spice Market</li>
               <li>Mumbai, India</li>
               <li>Phone: +91 123 456 7890</li>
-              <li>Email: contact@royalspice.com</li>
+              <li>Email: contact@swarnuts.com</li>
             </ul>
           </div>
 
@@ -88,7 +89,7 @@ export function Footer() {
 
         {/* Footer Bottom Section */}
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Royal Spice. All rights reserved.</p>
+          <p> {new Date().getFullYear()} Swarnuts. All rights reserved.</p>
           <p className="mt-4 text-sm text-muted-foreground">
             Developed and maintained by{' '}
             <a

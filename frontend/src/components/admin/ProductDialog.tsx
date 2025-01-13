@@ -32,7 +32,7 @@ const productSchema = z.object({
   price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: 'Price must be a positive number',
   }),
-  category: z.enum(['spices', 'dryfruits']),
+  category: z.enum(['nuts', 'dryfruits']),
   images: z.array(z.string()).min(1, 'At least one image is required'),
 });
 
@@ -55,7 +55,7 @@ export function ProductDialog({
       name: product?.name || '',
       description: product?.description || '',
       price: product?.price.toString() || '',
-      category: product?.category || 'spices',
+      category: product?.category || 'nuts',
       images: product?.images || [''],
     },
   });
@@ -134,7 +134,7 @@ export function ProductDialog({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="spices">Spices</SelectItem>
+                      <SelectItem value="nuts">Nuts</SelectItem>
                       <SelectItem value="dryfruits">Dry Fruits</SelectItem>
                     </SelectContent>
                   </Select>

@@ -24,7 +24,7 @@ export function ProductFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Products</SelectItem>
-            <SelectItem value="spices">Spices</SelectItem>
+            <SelectItem value="nuts">Nuts</SelectItem>
             <SelectItem value="dryfruits">Dry Fruits</SelectItem>
           </SelectContent>
         </Select>
