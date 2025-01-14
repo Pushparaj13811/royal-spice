@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { RootState } from '@/app/store';
 import { updateUserProfile } from '@/lib/api/user';
 import { useState } from 'react';
 
@@ -62,7 +62,7 @@ export function EditProfilePage() {
         description: 'Your profile has been updated successfully.',
       });
       navigate('/user');
-    } catch (error) {
+    } catch{
       toast({
         title: 'Error',
         description: 'Failed to update profile. Please try again.',
