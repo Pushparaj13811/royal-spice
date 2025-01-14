@@ -6,6 +6,15 @@ export interface Product {
   images: string[];
   category: 'dryfruits' | 'nuts';
   featured?: boolean;
+  spiceLevel?: number;
+  ingredients?: string[];
+  nutritionInfo?: {
+    servingSize: string;
+    calories: number;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
+  };
 }
 
 export interface CartItem extends Product {
@@ -44,4 +53,18 @@ export interface OrderDetails {
   shippingAddress: string;
   phone: string;
   paymentMethod: string;
+}
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
 }

@@ -1,9 +1,18 @@
 export interface User {
   id: string;
-  email: string;
+  firstName: string;
+  lastName: string;
   fullName: string;
   username: string;
   role: 'user' | 'admin';
+  email: string;
+  phone: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
 }
 
 export interface LoginCredentials {
