@@ -3,25 +3,28 @@ import { useParams } from 'react-router-dom';
 import { products } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/lib/hooks/useCart';
-import { ShoppingCart } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { ShoppingCart, Share2, Star } from 'lucide-react';
 import { ProductDetailsSkeleton } from '@/components/products/ProductDetailsSkeleton';
 import { ProductGridSkeleton } from '@/components/home/ProductSkeleton';
+import { motion } from 'framer-motion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const ProductCard = lazy(() => import('@/components/products/ProductCard'));
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 export function ProductPage() {
   const { id } = useParams();
   const product = products.find((p) => p.id === id);
   const { addItem } = useCart();
-  const [quantity, setQuantity] = useState('1');
+  const { toast } = useToast();
+  const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState<string | undefined>(product?.images[0]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
@@ -51,109 +54,227 @@ export function ProductPage() {
     );
   }
 
-  const recommendedProducts = products.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  );
+  const recommendedProducts = products
+    .filter((p) => p.category === product.category && p.id !== product.id)
+    .slice(0, 4);
+
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: product.name,
+        text: product.description,
+        url: window.location.href,
+      });
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
+  };
+
+  const spiceLevelIndicator = (level: number) => {
+    return Array(5)
+      .fill(0)
+      .map((_, index) => (
+        <span
+          key={index}
+          className={`inline-block w-3 h-3 rounded-full ${
+            index < level ? 'bg-red-500' : 'bg-gray-200'
+          }`}
+        />
+      ));
+  };
 
   return (
-    <div className="spice-pattern">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
       <Suspense fallback={<ProductDetailsSkeleton />}>
         {!imagesLoaded ? (
           <ProductDetailsSkeleton />
         ) : (
-          <div className="container mx-auto px-6 py-16">
-            <div className="mx-auto">
-              <div className="grid gap-8 md:grid-cols-2">
+          <div className="container mx-auto px-4 py-16">
+            <div className="mx-auto max-w-7xl">
+              <div className="grid gap-12 md:grid-cols-2">
                 {/* Image Section */}
-                <div className="space-y-4">
-                  <div className="w-full h-[500px] overflow-hidden">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-6"
+                >
+                  <div className="relative w-full h-[500px] overflow-hidden rounded-2xl shadow-lg">
                     <img
                       src={mainImage}
                       alt={`${product.name} main image`}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                       loading="lazy"
                     />
                   </div>
-                  <div className="flex gap-4 mt-4 overflow-x-auto">
+                  <div className="flex gap-4 mt-4 overflow-x-auto pb-2">
                     {product.images.map((image, index) => (
-                      <div
+                      <motion.div
                         key={index}
-                        className="aspect-square overflow-hidden cursor-pointer"
+                        whileHover={{ scale: 1.05 }}
+                        className="relative aspect-square cursor-pointer rounded-lg"
                         onClick={() => setMainImage(image)}
                       >
                         <img
                           src={image}
                           alt={`${product.name} image ${index + 1}`}
-                          className="h-24 w-24 object-cover border-2 border-gray-300 rounded-md hover:border-primary/30"
+                          className={`h-24 w-24 object-cover border-2 ${
+                            mainImage === image
+                              ? 'border-primary shadow-md'
+                              : 'border-gray-200'
+                          } rounded-lg hover:border-primary/30 transition-all`}
                           loading="lazy"
                         />
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Product Details */}
-                <div className="space-y-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="space-y-8"
+                >
                   <div className="space-y-4">
-                    <h1 className="text-3xl font-light text-foreground tracking-tight hover:text-primary/80 transition-colors">
-                      {product.name}
-                    </h1>
-                    <p className="text-lg text-muted-foreground">
-                      {product.description}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-light text-foreground tracking-tight">
-                      ₹{product.price}
-                    </p>
-                  </div>
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-4">
-                      <label htmlFor="quantity" className="font-medium">
-                        Quantity
-                      </label>
-                      <Select value={quantity} onValueChange={setQuantity}>
-                        <SelectTrigger className="w-24">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {[1, 2, 3, 4, 5].map((num) => (
-                            <SelectItem key={num} value={num.toString()}>
-                              {num}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    <div className="flex items-center justify-between">
+                      <h1 className="text-4xl font-semibold text-foreground">
+                        {product.name}
+                      </h1>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={handleShare}
+                              className="hover:bg-primary/10"
+                            >
+                              <Share2 className="h-5 w-5" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Share this product</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
-                    <Button
-                      variant="outline"
-                      className="w-full border-primary/30 text-primary hover:bg-primary/5 transition-colors"
-                      onClick={() =>
-                        addItem({ ...product, quantity: parseInt(quantity, 10) })
-                      }
-                    >
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      Add to Cart
-                    </Button>
+
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`h-5 w-5 ${
+                              star <= 4 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm text-muted-foreground">(128 reviews)</span>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <p className="text-2xl font-bold text-primary">₹{product.price}</p>
+                      <Badge variant="secondary" className="text-sm">
+                        In Stock
+                      </Badge>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">Spice Level</p>
+                      <div className="flex gap-2">
+                        {spiceLevelIndicator(product.spiceLevel || 3)}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <div className="w-32">
+                        <div className="flex items-center border rounded-md">
+                          <button
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="px-3 py-2 hover:bg-gray-100 rounded-l-md"
+                          >
+                            -
+                          </button>
+                          <input
+                            type="number"
+                            value={quantity}
+                            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                            className="w-12 text-center border-x"
+                            min="1"
+                          />
+                          <button
+                            onClick={() => setQuantity(quantity + 1)}
+                            className="px-3 py-2 hover:bg-gray-100 rounded-r-md"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => {
+                          addItem({ ...product, quantity });
+                          toast({
+                            title: "Added to Cart",
+                            description: `${product.name} (${quantity} ${quantity === 1 ? 'item' : 'items'}) has been added to your cart.`,
+                            duration: 2000
+                          });
+                        }}
+                        className="flex-1 gap-2"
+                      >
+                        <ShoppingCart className="h-5 w-5" />
+                        Add to Cart
+                      </Button>
+                    </div>
                   </div>
-                </div>
+
+                  <Tabs defaultValue="description" className="w-full">
+                    <TabsList className="w-full">
+                      <TabsTrigger value="description" className="flex-1">
+                        Description
+                      </TabsTrigger>
+                      <TabsTrigger value="ingredients" className="flex-1">
+                        Ingredients
+                      </TabsTrigger>
+                      <TabsTrigger value="nutrition" className="flex-1">
+                        Nutrition
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="description" className="mt-4">
+                      <p className="text-muted-foreground leading-relaxed">
+                        {product.description}
+                      </p>
+                    </TabsContent>
+                    <TabsContent value="ingredients" className="mt-4">
+                      <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                        {product.ingredients?.map((ingredient, index) => (
+                          <li key={index}>{ingredient}</li>
+                        ))}
+                      </ul>
+                    </TabsContent>
+                    <TabsContent value="nutrition" className="mt-4">
+                      <div className="space-y-2 text-muted-foreground">
+                        <p>Serving Size: 100g</p>
+                        <p>Calories: {product.nutritionInfo?.calories || 'N/A'}</p>
+                        <p>Protein: {product.nutritionInfo?.protein || 'N/A'}g</p>
+                        <p>Carbohydrates: {product.nutritionInfo?.carbs || 'N/A'}g</p>
+                        <p>Fat: {product.nutritionInfo?.fat || 'N/A'}g</p>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </motion.div>
               </div>
 
               {/* Recommended Products */}
               <div className="mt-16">
-                <h2 className="text-2xl font-semibold mb-8">
-                  You may also like
-                </h2>
-                <Suspense fallback={<ProductGridSkeleton count={5} />}>
-                  <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-5">
-                    {recommendedProducts.map((recommendedProduct) => (
-                      <ProductCard
-                        key={recommendedProduct.id}
-                        product={recommendedProduct}
-                      />
+                <h2 className="text-2xl font-semibold mb-8">You May Also Like</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  <Suspense fallback={<ProductGridSkeleton />}>
+                    {recommendedProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
                     ))}
-                  </div>
-                </Suspense>
+                  </Suspense>
+                </div>
               </div>
             </div>
           </div>

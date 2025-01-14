@@ -4,6 +4,7 @@ import { ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/lib/hooks/useCart';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   product: Product;
@@ -15,6 +16,7 @@ export function ProductCard({
   hideFeaturedBadge = true,
 }: ProductCardProps) {
   const { addItem } = useCart();
+  const { toast } = useToast();
 
   return (
     <div className="relative overflow-hidden transition-all duration-300 border-b border-muted-foreground/20 pb-4 hover:border-primary/30">
@@ -54,7 +56,13 @@ export function ProductCard({
         <Button
           variant="outline"
           className="w-full border-primary/30 text-primary hover:bg-primary/5 transition-colors"
-          onClick={() => addItem({ ...product, quantity: 1 })}
+          onClick={() => {
+            addItem({ ...product, quantity: 1 });
+            toast({
+              title: "Added to cart",
+              description: `${product.name} has been added to your cart.`,
+            });
+          }}
         >
           <ShoppingCart className="mr-2 h-4 w-4" />
           Add to Cart

@@ -5,6 +5,7 @@ import { store, persistor } from '@/app/store';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui/toaster';
+import { ScrollToTop } from '@/components/ScrollToTop';
 import Router from '@/routes';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
+          <ScrollToTop />
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">
