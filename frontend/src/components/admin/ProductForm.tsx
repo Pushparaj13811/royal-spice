@@ -68,6 +68,22 @@ export function ProductForm({ product, onSubmit, isEditMode }: ProductFormProps)
         ...data,
         price: Number(data.price),
         images,
+        status: 'active',
+        stock: 0,
+        minimumStock: 0,
+        maximumStock: 100,
+        reorderPoint: 10,
+        unitCost: Number(data.price) * 0.7, // Default unit cost as 70% of selling price
+        lastRestocked: new Date().toISOString(),
+        sku: `${data.category}-${Date.now()}`, // Generate a temporary SKU
+        weightPerUnit: 100, // Default 100g
+        origin: 'India', // Default origin
+        shelfLife: 12, // Default 12 months
+        storageConditions: 'room-temperature',
+        organicCertified: false,
+        qualityGrade: 'standard',
+        processingType: 'raw',
+        packagingType: 'retail'
       });
     } finally {
       setIsSubmitting(false);

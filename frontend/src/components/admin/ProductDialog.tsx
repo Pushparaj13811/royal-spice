@@ -66,6 +66,23 @@ export function ProductDialog({
       ...data,
       price: Number(data.price),
       featured: product?.featured || false,
+      status: product?.status || 'active',
+      stock: product?.stock || 0,
+      minimumStock: product?.minimumStock || 10,
+      maximumStock: product?.maximumStock || 100,
+      reorderPoint: product?.reorderPoint || 20,
+      unitCost: product?.unitCost || 0,
+      lastRestocked: product?.lastRestocked || new Date().toISOString(),
+      sku: product?.sku || `SKU-${Date.now()}`,
+      weightPerUnit: product?.weightPerUnit || 0,
+      origin: product?.origin || 'Unknown',
+      shelfLife: product?.shelfLife || 12,
+      storageConditions: product?.storageConditions || 'room-temperature',
+      organicCertified: product?.organicCertified || false,
+      qualityGrade: product?.qualityGrade || 'standard',
+      processingType: product?.processingType || 'raw',
+      packagingType: product?.packagingType || 'retail',
+      supplier: product?.supplier
     });
   };
 
