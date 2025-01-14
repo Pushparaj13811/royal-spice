@@ -1,10 +1,10 @@
-# Royal Spice & Dryfruits - Portfolio & E-commerce Platform
+# Swarnuts - Portfolio & E-commerce Platform
 
-A comprehensive portfolio and e-commerce platform developed by [Webwrap Technologies](https://www.webwrap.tech/) for Royal Spice & Dryfruits, showcasing their premium products and enabling online sales. Built with React, TypeScript, and Tailwind CSS.
+A comprehensive portfolio and e-commerce platform developed by [Webwrap Technologies](https://www.webwrap.tech/) for Swarnuts, showcasing their premium products and enabling online sales. Built with React, TypeScript, and Tailwind CSS.
 
 ## Overview
 
-Royal Spice & Dryfruits' platform serves dual purposes:
+Swarnuts' platform serves dual purposes:
 1. A portfolio website showcasing the company's legacy, product range, and commitment to quality
 2. An e-commerce platform enabling customers to purchase premium spices and dry fruits online
 

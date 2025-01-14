@@ -4,7 +4,7 @@ export interface Product {
   description: string;
   price: number;
   images: string[];
-  category: 'dryfruits' | 'spices';
+  category: 'dryfruits' | 'nuts';
   featured?: boolean;
 }
 

@@ -30,7 +30,7 @@ const productSchema = z.object({
   price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: 'Price must be a positive number',
   }),
-  category: z.enum(['spices', 'dryfruits']),
+  category: z.enum(['nuts', 'dryfruits']),
 });
 
 interface ProductFormProps {
@@ -50,7 +50,7 @@ export function ProductForm({ product, onSubmit, isEditMode }: ProductFormProps)
       name: product?.name || '',
       description: product?.description || '',
       price: product?.price.toString() || '',
-      category: product?.category || 'spices',
+      category: product?.category || 'nuts',
     },
   });
 
@@ -68,6 +68,22 @@ export function ProductForm({ product, onSubmit, isEditMode }: ProductFormProps)
         ...data,
         price: Number(data.price),
         images,
+        status: 'active',
+        stock: 0,
+        minimumStock: 0,
+        maximumStock: 100,
+        reorderPoint: 10,
+        unitCost: Number(data.price) * 0.7, // Default unit cost as 70% of selling price
+        lastRestocked: new Date().toISOString(),
+        sku: `${data.category}-${Date.now()}`, // Generate a temporary SKU
+        weightPerUnit: 100, // Default 100g
+        origin: 'India', // Default origin
+        shelfLife: 12, // Default 12 months
+        storageConditions: 'room-temperature',
+        organicCertified: false,
+        qualityGrade: 'standard',
+        processingType: 'raw',
+        packagingType: 'retail'
       });
     } finally {
       setIsSubmitting(false);
@@ -132,7 +148,7 @@ export function ProductForm({ product, onSubmit, isEditMode }: ProductFormProps)
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="spices">Spices</SelectItem>
+                  <SelectItem value="nuts">Nuts</SelectItem>
                   <SelectItem value="dryfruits">Dry Fruits</SelectItem>
                 </SelectContent>
               </Select>

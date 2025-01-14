@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 
 const categories = [
   {
-    id: 'spices',
-    name: 'Premium Spices',
-    description: 'Discover our collection of authentic Indian spices',
+    id: 'nuts',
+    name: 'Premium Nuts',
+    description: 'Discover our collection of premium quality nuts',
     image: 'https://images.pexels.com/photos/6086300/pexels-photo-6086300.jpeg',
   },
   {

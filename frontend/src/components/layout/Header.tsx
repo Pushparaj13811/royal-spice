@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
-import { logout } from '@/features/auth/authThunks'; 
+import { logout } from '@/features/auth/authThunks';
 
 export function Header() {
   const { items } = useCart();
@@ -33,7 +33,7 @@ export function Header() {
         });
         navigate('/');
       })
-      .catch((error: any) => {
+      .catch((error) => {
         toast({
           title: 'Error',
           description: `Logout failed: ${error.message || error}`,
@@ -53,8 +53,9 @@ export function Header() {
       <div className="container mx-auto px-6 flex h-20 items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-primary">Royal</span>
-          <span className="text-2xl font-bold text-secondary">Spice</span>
+          <span className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Swarnuts
+          </span>
         </Link>
 
         {/* Mobile Menu Button */}

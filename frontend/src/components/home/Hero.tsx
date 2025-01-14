@@ -8,10 +8,10 @@ export function Hero() {
     {
       image:
         'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=2940',
-      headline: 'Premium Quality Spices',
-      subheadline: 'Discover Authentic Indian Flavors',
+      headline: 'Premium Quality Nuts',
+      subheadline: 'Discover Authentic Flavors',
       description:
-        'Experience the finest selection of authentic Indian spices, carefully sourced and delivered fresh to your doorstep.',
+        'Experience the finest selection of authentic nuts, carefully sourced and delivered fresh to your doorstep.',
       accentColor: 'from-orange-500 to-red-600',
     },
     {
@@ -29,7 +29,7 @@ export function Hero() {
       headline: 'Artisanal Collection',
       subheadline: 'Crafted with Passion',
       description:
-        'Explore our curated collection of premium spices and dry fruits, perfect for every culinary creation.',
+        'Explore our curated collection of premium nuts and dry fruits, perfect for every snacking occasion.',
       accentColor: 'from-purple-500 to-indigo-600',
     },
   ];

@@ -32,7 +32,7 @@ const productSchema = z.object({
   price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: 'Price must be a positive number',
   }),
-  category: z.enum(['spices', 'dryfruits']),
+  category: z.enum(['nuts', 'dryfruits']),
   images: z.array(z.string()).min(1, 'At least one image is required'),
 });
 
@@ -55,7 +55,7 @@ export function ProductDialog({
       name: product?.name || '',
       description: product?.description || '',
       price: product?.price.toString() || '',
-      category: product?.category || 'spices',
+      category: product?.category || 'nuts',
       images: product?.images || [''],
     },
   });
@@ -66,6 +66,23 @@ export function ProductDialog({
       ...data,
       price: Number(data.price),
       featured: product?.featured || false,
+      status: product?.status || 'active',
+      stock: product?.stock || 0,
+      minimumStock: product?.minimumStock || 10,
+      maximumStock: product?.maximumStock || 100,
+      reorderPoint: product?.reorderPoint || 20,
+      unitCost: product?.unitCost || 0,
+      lastRestocked: product?.lastRestocked || new Date().toISOString(),
+      sku: product?.sku || `SKU-${Date.now()}`,
+      weightPerUnit: product?.weightPerUnit || 0,
+      origin: product?.origin || 'Unknown',
+      shelfLife: product?.shelfLife || 12,
+      storageConditions: product?.storageConditions || 'room-temperature',
+      organicCertified: product?.organicCertified || false,
+      qualityGrade: product?.qualityGrade || 'standard',
+      processingType: product?.processingType || 'raw',
+      packagingType: product?.packagingType || 'retail',
+      supplier: product?.supplier
     });
   };
 
@@ -134,7 +151,7 @@ export function ProductDialog({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="spices">Spices</SelectItem>
+                      <SelectItem value="nuts">Nuts</SelectItem>
                       <SelectItem value="dryfruits">Dry Fruits</SelectItem>
                     </SelectContent>
                   </Select>

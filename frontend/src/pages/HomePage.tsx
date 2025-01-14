@@ -61,7 +61,7 @@ export function HomePage() {
               Featured Products
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Discover our handpicked selection of premium products
+              Discover our handpicked selection of premium product
             </p>
           </div>
 
