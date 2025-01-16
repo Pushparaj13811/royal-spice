@@ -51,13 +51,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-6 flex h-20 items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="mr-2 flex items-center gap-2">
+          <img src="/logo.png" alt="Royal Spice Logo" className="h-12 w-auto hidden md:block" />
           <span className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Swarnuts
           </span>
         </Link>
-
         {/* Mobile Menu Button */}
         <button
           className="md:hidden"
