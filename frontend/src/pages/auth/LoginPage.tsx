@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -16,11 +16,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { loginSchema } from '@/lib/validations/auth';
 import { login } from '@/features/auth/authThunks';
-import { RootState } from '@/app/store';
 import { useToast } from '@/hooks/use-toast';
-import { GoogleButton } from '@/components/auth/GoogleButton';
-import { useGoogleAuth } from '@/lib/utils/auth';
 import { AppDispatch } from '@/app/store';
+import { useState } from 'react';
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -28,7 +26,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
-  const { loading, error } = useSelector((state: RootState) => state.auth);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -40,41 +38,58 @@ export function LoginPage() {
 
   async function onSubmit(data: LoginFormValues) {
     try {
+      setIsLoading(true);
+      const response = await dispatch(login(data)).unwrap();
       
-      await dispatch(login(data) as any).unwrap();
-
       toast({
-        title: 'Success',
-        description: 'Logged in successfully',
+        title: "Success!",
+        description: "You have successfully logged in.",
       });
-
+      
+      // Check if email is verified
+      if (!response.user.emailVerified) {
+        navigate('/auth/verify-email');
+        return;
+      }
+      
+      // Check if mobile is verified
+      if (!response.user.numberVerified) {
+        navigate('/auth/verify-mobile');
+        return;
+      }
+      
       navigate('/');
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error('Signup error:', error);
+      let errorMessage = "Failed to create account. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = (error as { message: string }).message;
+      }
       toast({
-        title: 'Error',
-        description: error as string,
-        variant: 'destructive',
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage || "Failed to login. Please try again.",
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-        <div className="absolute inset-0 bg-primary" />
+    <div className="container relative flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-primary-foreground">
-              Spice
-            </span>
-            <span className="text-2xl font-bold text-secondary">Store</span>
-          </Link>
+          <Link to="/">Royal Spice</Link>
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              "Experience the finest quality spices and dry fruits, carefully
-              sourced and delivered to your doorstep."
+              &ldquo;Experience the authentic taste of Indian cuisine, delivered right to your doorstep.&rdquo;
             </p>
           </blockquote>
         </div>
@@ -86,7 +101,7 @@ export function LoginPage() {
               Welcome back
             </h1>
             <p className="text-sm text-muted-foreground">
-              Enter your credentials to sign in
+              Enter your credentials to sign in to your account
             </p>
           </div>
 
@@ -101,7 +116,7 @@ export function LoginPage() {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="name@example.com"
+                        placeholder="Enter your email"
                         {...field}
                       />
                     </FormControl>
@@ -109,6 +124,7 @@ export function LoginPage() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="password"
@@ -126,38 +142,30 @@ export function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing In...' : 'Sign In'}
+
+              <div className="flex items-center justify-end">
+                <Link
+                  to="/auth/forgot-password"
+                  className="text-sm text-primary hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Signing in..." : "Sign in"}
               </Button>
-              <GoogleButton onClick={useGoogleAuth} />
             </form>
           </Form>
-
-          {error && (
-            <p className="text-center text-sm text-destructive">
-              {error}
-            </p>
-          )}
-
-          <div className="flex flex-col space-y-4">
-            <div className="text-center text-sm text-muted-foreground">
-              <Link
-                to="/auth/forgot-password"
-                className="hover:text-primary underline underline-offset-4"
-              >
-                Forgot your password?
-              </Link>
-            </div>
-            <div className="text-center text-sm">
-              Don't have an account?{' '}
-              <Link
-                to="/auth/signup"
-                className="hover:text-primary underline underline-offset-4"
-              >
-                Sign up
-              </Link>
-            </div>
-          </div>
+          <p className="px-8 text-center text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link
+              to="/auth/signup"
+              className="hover:text-brand underline underline-offset-4"
+            >
+              Sign up
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -19,20 +19,46 @@ const UserSchema = new Schema(
             index: true,
         },
         mobile: {
-            type: Number,
-            length: 10,
+            type: String,
             required: false,
             unique: true,
+            sparse: true,
             trim: true,
-            index: true,
+            validate: {
+                validator: function(v) {
+                    if (!v) return true; // Allow empty/null values
+                    return /^\d{10}$/.test(v);
+                },
+                message: props => `${props.value} is not a valid 10-digit mobile number!`
+            }
         },
+        emailVerified: {
+            type: Boolean,
+            default: false,
+            required: true
+        },
+        numberVerified: {
+            type: Boolean,
+            default: false,
+            required: true
+        },
+        emailVerificationToken: String,
+        emailVerificationTokenExpiry: Date,
+        mobileVerificationOTP: String,
+        mobileVerificationOTPExpiry: Date,
         alternateMobile: {
-            type: Number,
-            length: 10,
+            type: String,
             required: false,
             unique: true,
+            sparse: true,
             trim: true,
-            index: true,
+            validate: {
+                validator: function(v) {
+                    if (!v) return true; // Allow empty/null values
+                    return /^\d{10}$/.test(v);
+                },
+                message: props => `${props.value} is not a valid 10-digit mobile number!`
+            }
         },
         password: {
             type: String,
@@ -46,24 +72,33 @@ const UserSchema = new Schema(
             type: String,
             required: false,
         },
+        resetPasswordToken: String,
+        resetPasswordExpire: Date
     },
     {
         timestamps: true,
     }
 );
 
-UserSchema.pre("save", function (next) {
-    if (!this.isModified("password")) {
-        return next();
+// Hash password before saving
+UserSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+    
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error) {
+        next(error);
     }
-    this.password = bcrypt.hashSync(this.password, 10);
-    next();
 });
 
+// Method to check password
 UserSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
+// Method to generate access token
 UserSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {

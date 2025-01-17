@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { logout } from '@/features/auth/authThunks';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getAvatarUrl, getInitials } from '@/lib/utils';
 
 export function Header() {
   const { items } = useCart();
@@ -99,16 +101,26 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="icon"
-                  className="relative"
+                  size="sm"
+                  className="relative h-8 w-8 rounded-full"
                   aria-label="User menu"
                 >
-                  <User className="h-5 w-5" />
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={getAvatarUrl(user?.email || '')} alt={user?.fullName} />
+                    <AvatarFallback>{getInitials(user?.fullName)}</AvatarFallback>
+                  </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <div className="px-2 py-1.5 text-sm font-medium">
-                  {user?.fullName}
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex items-center gap-2 p-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={getAvatarUrl(user?.email || '')} alt={user?.fullName} />
+                    <AvatarFallback>{getInitials(user?.fullName)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col space-y-0.5">
+                    <p className="text-sm font-medium truncate">{user?.fullName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                  </div>
                 </div>
                 <DropdownMenuSeparator />
                 {isAdmin ? (

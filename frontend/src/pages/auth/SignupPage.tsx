@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -14,83 +14,82 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { signupSchema } from '@/lib/validations/auth';
 import { signup } from '@/features/auth/authThunks';
-import { RootState } from '@/app/store';
 import { useToast } from '@/hooks/use-toast';
-import { GoogleButton } from '@/components/auth/GoogleButton';
+import { AppDispatch } from '@/app/store';
+import { useState } from 'react';
+
+// Define the signup schema with mobile field
+const signupSchema = z.object({
+  fullName: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  mobile: z.string().min(10, 'Mobile number must be at least 10 digits'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export function SignupPage() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
-
-  // Access the auth state from the Redux store
-  const { loading, error } = useSelector((state: RootState) => state.auth);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: '',
+      fullName: '',
       email: '',
+      mobile: '',
       password: '',
       confirmPassword: '',
     },
   });
 
-  async function onSubmit(data: SignupFormValues) {
+  const onSubmit = async (data: SignupFormValues) => {
     try {
-      const result = await dispatch(
-        signup({
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        })
-      );
-
-      // Check if the signup was successful
-      if (signup.fulfilled.match(result)) {
-        toast({
-          title: 'Success',
-          description: 'Account created successfully',
-        });
-        navigate('/');
-      } else if (signup.rejected.match(result)) {
-        // Handle rejected signup
-        toast({
-          title: 'Error',
-          description: result.payload as string,
-          variant: 'destructive',
-        });
-      }
-    } catch (error) {
+      setIsLoading(true);
+      await dispatch(signup(data)).unwrap();
+      
       toast({
-        title: 'Error',
-        description: 'Something went wrong',
-        variant: 'destructive',
+        title: "Success!",
+        description: "Account created successfully. Please verify your email.",
       });
+      navigate('/auth/verify-email');
+    } catch (error: unknown) {
+      let errorMessage = "Failed to create account. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = (error as { message: string }).message;
+      }
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-        <div className="absolute inset-0 bg-primary" />
+    <div className="container relative flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-primary-foreground">
-              Spice
-            </span>
-            <span className="text-2xl font-bold text-secondary">Store</span>
-          </Link>
+          <Link to="/">Royal Spice</Link>
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              "Join our community of spice enthusiasts and discover a world of
-              flavors."
+              &ldquo;Experience the authentic taste of Indian cuisine, delivered right to your doorstep.&rdquo;
             </p>
           </blockquote>
         </div>
@@ -102,28 +101,29 @@ export function SignupPage() {
               Create an account
             </h1>
             <p className="text-sm text-muted-foreground">
-              Enter your details to get started
+              Enter your details below to create your account
             </p>
           </div>
 
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John Doe" {...field} />
+                      <Input
+                        placeholder="Enter your full name"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="email"
@@ -133,7 +133,7 @@ export function SignupPage() {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="name@example.com"
+                        placeholder="Enter your email"
                         {...field}
                       />
                     </FormControl>
@@ -141,6 +141,25 @@ export function SignupPage() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="mobile"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Mobile Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder="Enter your mobile number"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="password"
@@ -158,6 +177,7 @@ export function SignupPage() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -175,30 +195,26 @@ export function SignupPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing Up...' : 'Sign Up'}
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Creating account..." : "Create account"}
               </Button>
-              <GoogleButton />
             </form>
           </Form>
-
-          <div className="text-center text-sm">
-            Already have an account?{' '}
+          
+          <p className="px-8 text-center text-sm text-muted-foreground">
+            Already have an account?{" "}
             <Link
               to="/auth/login"
-              className="hover:text-primary underline underline-offset-4"
+              className="hover:text-brand underline underline-offset-4"
             >
               Sign in
             </Link>
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-600 text-center mt-2">
-              {error}
-            </p>
-          )}
+          </p>
         </div>
       </div>
     </div>
   );
 }
+
+export default SignupPage;

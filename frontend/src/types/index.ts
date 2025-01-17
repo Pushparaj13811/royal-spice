@@ -4,7 +4,7 @@ export interface Product {
   description: string;
   price: number;
   images: string[];
-  category: 'dryfruits' | 'nuts';
+  category: 'dryfruits' | 'nuts' | 'spices';
   featured?: boolean;
   spiceLevel?: number;
   ingredients?: string[];
@@ -15,6 +15,24 @@ export interface Product {
     carbs?: number;
     fat?: number;
   };
+  // Inventory management fields - making some optional for data.ts compatibility
+  stock?: number;
+  minimumStock?: number;
+  maximumStock?: number;
+  reorderPoint?: number;
+  unitCost?: number;
+  lastRestocked?: string;
+  sku?: string;
+  weightPerUnit?: number;
+  origin?: string;
+  shelfLife?: number;
+  storageConditions?: 'room-temperature' | 'refrigerated' | 'frozen';
+  organicCertified?: boolean;
+  qualityGrade?: 'premium' | 'standard' | 'economy';
+  processingType?: 'raw' | 'processed' | 'roasted';
+  packagingType?: 'retail' | 'bulk' | 'wholesale';
+  supplier?: string;
+  status?: 'active' | 'inactive' | 'discontinued';
 }
 
 export interface CartItem extends Product {
@@ -38,6 +56,7 @@ export interface ChoosingUs {
 
 export interface OrderDetails {
   id: string;
+  orderId?: string;
   orderDate: string;
   status: 'pending' | 'processing' | 'completed' | 'cancelled' | 'shipped';
   items: Array<{
@@ -67,4 +86,71 @@ export interface User {
     state: string;
     pincode: string;
   };
+}
+
+export type UserProfile = Omit<User, 'id'>;
+
+export interface Milestone {
+  id: string;
+  year: number;
+  title: string;
+  description: string;
+}
+
+export interface InventoryTransaction {
+  id: string;
+  productId: string;
+  date: string;
+  type: 'purchase' | 'sale' | 'wastage' | 'restock';
+  quantity: number;
+  unitPrice: number;
+  totalAmount: number;
+  notes?: string;
+  batchNumber?: string;
+  expiryDate?: string;
+  performedBy?: string;
+  qualityCheck?: {
+    approved: boolean;
+    appearance: string;
+  };
+}
+
+export interface PaymentData {
+  orderId: string;
+  amount: number;
+  currency: string;
+  paymentMethod: string;
+  total?: number;
+}
+
+export interface ShippingDetails {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    pincode: string;
+  };
+}
+
+export interface PaymentPageProps {
+  shippingDetails: ShippingDetails;
+}
+
+export interface CheckoutSuccessPageProps {
+  orderDetails: OrderDetails;
+  onContinueShopping: () => void;
+}
+
+export interface ForgotPasswordFormValues {
+  email: string;
+}
+
+export interface SignupCredentials {
+  name: string;
+  email: string;
+  password: string;
 }

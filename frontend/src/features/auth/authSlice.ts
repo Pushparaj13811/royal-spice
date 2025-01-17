@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AuthState } from './authTypes';
-import { login, signup, forgotPassword, logout as logoutThunk } from './authThunks';
+import { login, signup, forgotPassword, logout } from './authThunks';
 
 const initialState: AuthState = {
   user: null,
@@ -9,6 +9,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  needsEmailVerification: false,
 };
 
 const authSlice = createSlice({
@@ -23,7 +24,9 @@ const authSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       state.isAuthenticated = true;
     },
-    
+    setNeedsEmailVerification: (state, action) => {
+      state.needsEmailVerification = action.payload;
+    },
   },
   extraReducers: (builder) => {
     // Login
@@ -34,33 +37,29 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload?.data.user;
-        state.accessToken = action.payload.data.accessToken;
-        state.refreshToken = action.payload.data.refreshToken;
         state.isAuthenticated = true;
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
-
-    // Signup
-    builder
+      })
+      // Signup
       .addCase(signup.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload?.data.user;
-        state.accessToken = action.payload.data.accessToken;
-        state.refreshToken = action.payload.data.refreshToken;
-        state.isAuthenticated = true;
+        state.user = action.payload.user;
+        state.needsEmailVerification = true;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      });
+      })
 
     // Forgot Password
     builder
@@ -76,25 +75,26 @@ const authSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Logout Thunk
+    // Logout
     builder
-      .addCase(logoutThunk.pending, (state) => {
+      .addCase(logout.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(logoutThunk.fulfilled, (state) => {
+      .addCase(logout.fulfilled, (state) => {
         state.loading = false;
         state.user = null;
         state.accessToken = null;
         state.refreshToken = null;
         state.isAuthenticated = false;
+        state.needsEmailVerification = false;
       })
-      .addCase(logoutThunk.rejected, (state, action) => {
+      .addCase(logout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
   },
 });
 
-export const { clearError, refreshTokens } = authSlice.actions;
+export const { clearError, refreshTokens, setNeedsEmailVerification } = authSlice.actions;
 export default authSlice.reducer;

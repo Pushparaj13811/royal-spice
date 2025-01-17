@@ -5,10 +5,10 @@ import { PATHS } from '@/routes/paths';
 
 // Lazy load components
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage').then(module => ({ default: module.LoginPage })));
-// Example lazy import
-// const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const SignupPage = lazy(() => import('@/pages/auth/SignupPage').then(module => ({ default: module.SignupPage })));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage').then(module => ({ default: module.ForgotPasswordPage })));
+const VerifyEmailPage = lazy(() => import('@/pages/auth/VerifyEmailPage').then(module => ({ default: module.VerifyEmailPage })));
+const VerifyMobilePage = lazy(() => import('@/pages/auth/VerifyMobilePage').then(module => ({ default: module.VerifyMobilePage })));
 
 export const authRoutes: RouteObject[] = [
   {
@@ -34,5 +34,13 @@ export const authRoutes: RouteObject[] = [
         <ForgotPasswordPage />
       </GuestGuard>
     ),
+  },
+  {
+    path: PATHS.VERIFY_EMAIL,
+    element: <VerifyEmailPage />,
+  },
+  {
+    path: PATHS.VERIFY_MOBILE,
+    element: <VerifyMobilePage />,
   },
 ];

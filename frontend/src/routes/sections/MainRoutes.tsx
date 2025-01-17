@@ -3,14 +3,15 @@ import { PATHS } from '@/routes/paths';
 import { lazyLoad } from '@/lib/utils/lazy';
 
 // Lazy load components
-const HomePage = lazyLoad(() => import('@/pages/HomePage'), 'HomePage');
-const AboutPage = lazyLoad(() => import('@/pages/AboutPage'), 'AboutPage');
-const ContactPage = lazyLoad(() => import('@/pages/ContactPage'), 'ContactPage');
-const ProductsPage = lazyLoad(() => import('@/pages/ProductsPage'), 'ProductsPage');
-const ProductPage = lazyLoad(() => import('@/pages/ProductPage'), 'ProductPage');
-const CartPage = lazyLoad(() => import('@/pages/cart/CartPage'), 'CartPage');
+const HomePage = lazyLoad(() => import('@/pages/HomePage'));
+const AboutPage = lazyLoad(() => import('@/pages/AboutPage'));
+const ContactPage = lazyLoad(() => import('@/pages/ContactPage'));
+const ProductsPage = lazyLoad(() => import('@/pages/ProductsPage'));
+const ProductPage = lazyLoad(() => import('@/pages/ProductPage'));
+const CartPage = lazyLoad(() => import('@/pages/cart/CartPage').then(module => ({ default: module.CartPage })));
+const NotFoundPage = lazyLoad(() => import('@/pages/NotFoundPage'));
 
-export const mainRoutes: RouteObject[] = [
+const mainRoutes: RouteObject[] = [
   {
     path: PATHS.HOME,
     element: <HomePage />,
@@ -35,4 +36,10 @@ export const mainRoutes: RouteObject[] = [
     path: PATHS.CART,
     element: <CartPage />,
   },
+  {
+    path: '*',
+    element: <NotFoundPage />,
+  },
 ];
+
+export default mainRoutes;

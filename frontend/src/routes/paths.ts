@@ -12,6 +12,8 @@ export const PATHS = {
   LOGIN: '/auth/login',
   SIGNUP: '/auth/signup',
   FORGOT_PASSWORD: '/auth/forgot-password',
+  VERIFY_EMAIL: '/auth/verify-email/:token?',
+  VERIFY_MOBILE: '/auth/verify-mobile',
   
   // Protected user routes
   USER: {
@@ -19,6 +21,7 @@ export const PATHS = {
     PROFILE: '/user/edit-profile',
     ORDERS: '/user/orders',
     ORDER_DETAILS: '/user/orders/:id',
+    ADDRESSES: '/user/addresses',
   },
   
   // Protected admin routes

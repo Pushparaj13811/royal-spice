@@ -1,7 +1,7 @@
 import { ContactForm } from '@/components/contact/ContactForm';
 import { MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 
-export function ContactPage() {
+function ContactPage() {
   return (
     <div className="bg-background min-h-screen">
       {/* Hero Section with Pattern Background */}
@@ -127,3 +127,5 @@ export function ContactPage() {
     </div>
   );
 }
+
+export default ContactPage;

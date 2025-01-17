@@ -8,6 +8,7 @@ const UserDashboard = lazy(() => import('@/pages/user/UserDashboard').then(modul
 const EditProfilePage = lazy(() => import('@/pages/user/EditProfilePage').then(module => ({ default: module.EditProfilePage })));
 const OrdersPage = lazy(() => import('@/pages/OrdersPage').then(module => ({ default: module.OrdersPage })));
 const OrderDetailsPage = lazy(() => import('@/pages/user/OrderDetailsPage').then(module => ({ default: module.OrderDetailsPage })));
+const AddressPage = lazy(() => import('@/pages/user/AddressPage'));
 
 export const userRoutes: RouteObject[] = [
   {
@@ -39,6 +40,14 @@ export const userRoutes: RouteObject[] = [
     element: (
       <AuthGuard>
         <OrderDetailsPage />
+      </AuthGuard>
+    ),
+  },
+  {
+    path: PATHS.USER.ADDRESSES,
+    element: (
+      <AuthGuard>
+        <AddressPage />
       </AuthGuard>
     ),
   },

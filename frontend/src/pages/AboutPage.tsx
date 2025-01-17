@@ -2,7 +2,7 @@ import { testimonials, ReasonsToChooseUs } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
-export function AboutPage() {
+function AboutPage() {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
@@ -137,3 +137,5 @@ export function AboutPage() {
     </div>
   );
 }
+
+export default AboutPage;

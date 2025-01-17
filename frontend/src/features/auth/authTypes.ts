@@ -1,29 +1,12 @@
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  username: string;
-  role: 'user' | 'admin';
-  email: string;
-  phone: string;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    pincode: string;
-  };
-}
+import { User, Address, LoginCredentials } from '@/types/user.types';
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
+export type { User, Address, LoginCredentials };
 
 export interface SignupCredentials {
-  name: string;
+  fullName: string;
   email: string;
   password: string;
+  mobile: string;
 }
 
 export interface AuthState {
@@ -33,15 +16,11 @@ export interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  needsEmailVerification: boolean;
 }
 
-export interface Data{
+export interface AuthData {
   user: User;
   accessToken: string;
   refreshToken: string;
-}
-
-export interface AuthResponse {
-  data: Data;
-  token: string;
 }

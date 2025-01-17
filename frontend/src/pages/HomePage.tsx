@@ -13,7 +13,7 @@ import { products } from '@/lib/data';
 import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export function HomePage() {
+function HomePage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -118,3 +118,5 @@ export function HomePage() {
     </div>
   );
 }
+
+export default HomePage;

@@ -4,7 +4,7 @@ import { ProductGrid } from '@/components/products/ProductGrid';
 import { ProductFilters } from '@/components/products/ProductFilters';
 import { products } from '@/lib/data';
 
-export function ProductsPage() {
+function ProductsPage() {
   const location = useLocation();
   const [category, setCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
@@ -57,3 +57,6 @@ export function ProductsPage() {
     </div>
   );
 }
+
+
+export default ProductsPage;

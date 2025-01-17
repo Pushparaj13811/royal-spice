@@ -1,7 +1,5 @@
-import { lazy } from 'react';
+import { lazy, ComponentType } from 'react';
 
-export function lazyLoad(importFunc: () => Promise<{ [key: string]: any }>, name = 'default') {
-  return lazy(() =>
-    importFunc().then((module) => ({ default: module[name] }))
-  );
+export function lazyLoad<T extends ComponentType<any>>(importFunc: () => Promise<{ default: T }>) {
+  return lazy(importFunc);
 }

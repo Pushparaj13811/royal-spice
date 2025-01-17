@@ -19,7 +19,7 @@ import {
 
 const ProductCard = lazy(() => import('@/components/products/ProductCard'));
 
-export function ProductPage() {
+function ProductPage() {
   const { id } = useParams();
   const product = products.find((p) => p.id === id);
   const { addItem } = useCart();
@@ -283,3 +283,5 @@ export function ProductPage() {
     </div>
   );
 }
+
+export default ProductPage;
